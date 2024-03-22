@@ -44,33 +44,38 @@ On_WHITE='\033[47m'       # WHITE
 
 
 # Menu
-VERSION=1.0
-
-
 clear
 
-printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
+VERSION=1.0
 FILES=$(curl -s -H "Accept: application/vnd.github.v3+json" \
     "https://api.github.com/repos/Deblok-Workshop/kasm-scripts/contents/" 2>/dev/null \
     | jq -r '.[] | select(.type == "file") | .name')
+LENGTH=$(echo "$FILES" | wc -l)
+LENGTH=$((LENGTH - 2)) # excluding 2 files
+SELECTED=0
+
+printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
 
 printf "$OFF"
 
-SELECTED=0
+
 
 print_menu() {
     clear
     printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
     local index=0
     while IFS= read -r filename; do
-        if [ "$index" -eq "$SELECTED" ]; then
-            printf "$BBLUE- $BLUE$filename$OFF\n"
-        else
-            printf "$PURPLE  $filename$OFF\n"
+        if [[ "$filename" != "LICENSE" && "$filename" != "README.md" ]]; then
+            if [ "$index" -eq "$SELECTED" ]; then
+                printf "$BBLUE- $BLUE$filename$OFF\n"
+            else
+                printf "$PURPLE  $filename$OFF\n"
+            fi
+            ((index++))
         fi
-        ((index++))
     done <<< "$FILES"
 }
+
 
 print_menu
 while true; do
@@ -80,16 +85,17 @@ while true; do
         $'\x1b[B') ((SELECTED++)) ;;
         "") break ;; 
     esac
-    TMP=$(echo "$FILES" | wc -l)
+    TMP=$LENGTH
     TMP=$((TMP + 1))
     if [ "$SELECTED" -lt 0 ]; then
-        SELECTED=$(echo "$FILES" | wc -l)
+        SELECTED=$LENGTH
         SELECTED=$((SELECTED - 1))
-    elif [ "$SELECTED" -ge "$(echo "$FILES" | wc -l)" ]; then
+    elif [ "$SELECTED" -ge "$LENGTH" ]; then
         SELECTED=0
     fi
     print_menu
 done
-
-printf "$OFF\n"
-printf "$OFF\n"
+SEL1IDX=$((SELECTED + 1))
+echo $(echo -e "$FILES" | sed -n "$SEL1IDX p")
+clear
+printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
