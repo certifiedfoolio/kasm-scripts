@@ -41,35 +41,6 @@ On_PURPLE='\033[45m'      # PURPLE
 On_CYAN='\033[46m'        # CYAN
 On_WHITE='\033[47m'       # WHITE
 
-# High Intensity
-IBLACK='\033[0;90m'       # BLACK
-IRED='\033[0;91m'         # RED
-IGREEN='\033[0;92m'       # GREEN
-IYELLOW='\033[0;93m'      # YELLOW
-IBLUE='\033[0;94m'        # BLUE
-IPURPLE='\033[0;95m'      # PURPLE
-ICYAN='\033[0;96m'        # CYAN
-IWHITE='\033[0;97m'       # WHITE
-
-# Bold High Intensity
-BIBLACK='\033[1;90m'      # BLACK
-BIRED='\033[1;91m'        # RED
-BIGREEN='\033[1;92m'      # GREEN
-BIYELLOW='\033[1;93m'     # YELLOW
-BIBLUE='\033[1;94m'       # BLUE
-BIPURPLE='\033[1;95m'     # PURPLE
-BICYAN='\033[1;96m'       # CYAN
-BIWHITE='\033[1;97m'      # WHITE
-
-# High Intensity backgrounds
-On_IBLACK='\033[0;100m'   # BLACK
-On_IRED='\033[0;101m'     # RED
-On_IGREEN='\033[0;102m'   # GREEN
-On_IYELLOW='\033[0;103m'  # YELLOW
-On_IBLUE='\033[0;104m'    # BLUE
-On_IPURPLE='\033[0;105m'  # PURPLE
-On_ICYAN='\033[0;106m'    # CYAN
-On_IWHITE='\033[0;107m'   # WHITE
 
 
 # Menu
@@ -86,15 +57,39 @@ FILES=$(curl -s -H "Accept: application/vnd.github.v3+json" \
 printf "$OFF"
 
 SELECTED=0
-counter=0
-while IFS= read -r filename; do
-    if [ "$counter" -eq "$SELECTED" ]; then
-        printf "$BBLUE- $BLUE$filename\n"
-    else
-        printf "  $filename\n"
+
+print_menu() {
+    clear
+    printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
+    local index=0
+    while IFS= read -r filename; do
+        if [ "$index" -eq "$SELECTED" ]; then
+            printf "$BBLUE- $BLUE$filename$OFF\n"
+        else
+            printf "$PURPLE  $filename$OFF\n"
+        fi
+        ((index++))
+    done <<< "$FILES"
+}
+
+print_menu
+while true; do
+    read -rsn3 key
+    case "$key" in
+        $'\x1b[A') ((SELECTED--)) ;; 
+        $'\x1b[B') ((SELECTED++)) ;;
+        "") break ;; 
+    esac
+    TMP=$(echo "$FILES" | wc -l)
+    TMP=$((TMP + 1))
+    if [ "$SELECTED" -lt 0 ]; then
+        SELECTED=$(echo "$FILES" | wc -l)
+        SELECTED=$((SELECTED - 1))
+    elif [ "$SELECTED" -ge "$(echo "$FILES" | wc -l)" ]; then
+        SELECTED=0
     fi
-    ((counter++))
-done <<< "$FILES"
+    print_menu
+done
 
-
+printf "$OFF\n"
 printf "$OFF\n"
