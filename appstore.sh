@@ -4,12 +4,14 @@ if [ "$EUID" -ne 0 ]; then
     exit $?
 fi
 
+DEBIAN_FRONTEND=noninteractive
 
 echo "[ ########## WARNING! PLEASE READ!!! ########## ]"
 echo "THIS ONLY WORKS ON DEBIAN/UBUNTU CONTAINERS -----"
 echo "IF YOU ARENT IN ONE SWITCH TO ONE OR PRESS CTRL+C"
 echo "Waiting 3 seconds..."
 sleep 3
+
 
 # Install SNAP
 sudo apt -y update

@@ -41,6 +41,8 @@ On_PURPLE='\033[45m'      # PURPLE
 On_CYAN='\033[46m'        # CYAN
 On_WHITE='\033[47m'       # WHITE
 
+DEBIAN_FRONTEND=noninteractive
+
 if [ "$EUID" -ne 0 ]; then
     printf "$BBLUE[i]$OFF |$BLUE This script needs to be run as root. Attempting to elevate...$OFF\n"
     sudo "bash" "$0" "$@"  
