@@ -95,7 +95,12 @@ while true; do
     fi
     print_menu
 done
-SEL1IDX=$((SELECTED + 1))
-echo $(echo -e "$FILES" | sed -n "$SEL1IDX p")
+SEL1IDX=$((SELECTED + 3))
+FILE=$(echo -e "$FILES" | sed -n "$SEL1IDX p")
 clear
 printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
+printf "$BBLUE[i] $OFF|$BLUE Downloading...$OFF\n"
+
+FILENAME=$(head -c 4 /dev/urandom | od -An -x | tr -d ' ' )
+curl "https://raw.githubusercontent.com/Deblok-Workshop/kasm-scripts/main/$FILE" 2>/dev/null > "/tmp/$FILENAME.sh"
+bash "/tmp/$FILENAME.sh"
