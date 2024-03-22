@@ -41,3 +41,46 @@ On_PURPLE='\033[45m'      # PURPLE
 On_CYAN='\033[46m'        # CYAN
 On_WHITE='\033[47m'       # WHITE
 
+if [ "$EUID" -ne 0 ]; then
+    printf "$BBLUE[i]$OFF |$BLUE This script needs to be run as root. Attempting to elevate...$OFF\n"
+    sudo "bash" "$0" "$@"  
+    exit $?
+fi
+
+ubuntu_inst() {
+printf "$BBLUE[i]$OFF |$BLUE Installing for Ubuntu...$OFF\n"
+curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+sudo apt-get update > /dev/null && sudo apt-get -y install cloudflare-warp
+printf "$BBLUE[i]$OFF |$BLUE Successfully installed... Connecting to WARP.$OFF\n"
+sleep 1
+connect
+}
+
+debian_inst() {
+printf "$BBLUE[i]$OFF |$BLUE Installing for Debian...$OFF\n"
+curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+sudo apt-get update > /dev/null && sudo apt-get -y install cloudflare-warp > /dev/null
+printf "$BBLUE[i]$OFF |$BLUE Successfully installed... Connecting to WARP.$OFF\n"
+sleep 1
+connect
+}
+
+connect() {
+warp-cli --accept-tos registration new > /dev/null 
+warp-cli --accept-tos mode warp+doh > /dev/null 
+warp-cli --accept-tos connect
+}
+
+echo "Select your distro:"
+echo "1. Debian"
+echo "2. Ubuntu"
+
+read -sn1 distro
+case "$distro" in
+    1) debian_inst ;;
+    2) ubuntu_inst ;;
+    *) printf "$BRED[!] $OFF|$RED Invalid input. Exiting.\n" && exit 1 ;;
+esac
+
