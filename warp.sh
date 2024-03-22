@@ -47,8 +47,11 @@ if [ "$EUID" -ne 0 ]; then
     exit $?
 fi
 
-ubuntu_inst() {
-printf "$BBLUE[i]$OFF |$BLUE Installing for Ubuntu...$OFF\n"
+get_distro() {
+OS=$( ( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1)
+}
+
+apt_inst() {
 curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
 sudo apt-get update > /dev/null && sudo apt-get -y install cloudflare-warp
@@ -57,14 +60,20 @@ sleep 1
 connect
 }
 
+ubuntu_inst() {
+printf "$BBLUE[i]$OFF |$BLUE Installing for Ubuntu...$OFF\n"
+apt_inst
+
+}
+
 debian_inst() {
 printf "$BBLUE[i]$OFF |$BLUE Installing for Debian...$OFF\n"
-curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
-sudo apt-get update > /dev/null && sudo apt-get -y install cloudflare-warp > /dev/null
-printf "$BBLUE[i]$OFF |$BLUE Successfully installed... Connecting to WARP.$OFF\n"
-sleep 1
-connect
+apt_inst
+}
+
+other_inst() {
+printf "$BBLUE[i]$OFF |$BLUE Installing for $( ( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1)...$OFF\n"
+apt_inst
 }
 
 connect() {
@@ -76,11 +85,20 @@ warp-cli --accept-tos connect
 echo "Select your distro:"
 echo "1. Debian"
 echo "2. Ubuntu"
+echo "3. Other distro that supports APT"
+echo ""
+echo "8. Connect only (use warp-cli connect instead)"
+echo "9. Disconnect (use warp-cli disconnect instead)"
+printf "$BBLUE"
+printf "TIP:$BLUE Pressing any other key exits.$OFF\n"
 
 read -sn1 distro
 case "$distro" in
     1) debian_inst ;;
     2) ubuntu_inst ;;
+    3) other_inst ;;
+    8) connect ;;
+    9) warp-cli --accept-tos disconnect ;;
     *) printf "$BRED[!] $OFF|$RED Invalid input. Exiting.\n" && exit 1 ;;
 esac
 
