@@ -104,3 +104,6 @@ printf "$BBLUE[i] $OFF|$BLUE Downloading...$OFF\n"
 FILENAME=$(head -c 4 /dev/urandom | od -An -x | tr -d ' ' )
 curl "https://raw.githubusercontent.com/Deblok-Workshop/kasm-scripts/main/$FILE" 2>/dev/null > "/tmp/$FILENAME.sh"
 bash "/tmp/$FILENAME.sh"
+
+printf "$BBLUE[i] $OFF|$BLUE Script stopped, removing tempfile...$OFF\n"
+rm -rf "/tmp/$FILENAME.sh"
