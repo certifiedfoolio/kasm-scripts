@@ -12,14 +12,15 @@ echo "Waiting 3 seconds..."
 sleep 3
 
 # Install SNAP
-sudo apt update
-sudo apt install snapd
+sudo apt -y update
+sudo apt -y install snapd
 sudo snap install core
 sudo snap install snap-store
 
 # Install Flatpak
-sudo apt install flatpak
-sudo apt install gnome-software-plugin-flatpak
+sudo apt -y install flatpak
+sudo apt -y install gnome-software-plugin-flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
+clear 
 echo "Snap and Flatpak have been installed successfully."
