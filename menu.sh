@@ -74,5 +74,27 @@ On_IWHITE='\033[0;107m'   # WHITE
 
 # Menu
 VERSION=1.0
+
+
 clear
+
 printf "$YELLOW---$OFF$BGREEN kasm-scripts Menu $BLUE(v$VERSION)$OFF $YELLOW---\n"
+FILES=$(curl -s -H "Accept: application/vnd.github.v3+json" \
+    "https://api.github.com/repos/Deblok-Workshop/kasm-scripts/contents/" 2>/dev/null \
+    | jq -r '.[] | select(.type == "file") | .name')
+
+printf "$OFF"
+
+SELECTED=0
+counter=0
+while IFS= read -r filename; do
+    if [ "$counter" -eq "$SELECTED" ]; then
+        printf "$BBLUE- $BLUE$filename\n"
+    else
+        printf "  $filename\n"
+    fi
+    ((counter++))
+done <<< "$FILES"
+
+
+printf "$OFF\n"
