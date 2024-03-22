@@ -6,5 +6,5 @@ sleep 3
 
 curl -fsSL https://apt.armcord.app/public.gpg | sudo gpg --dearmor -o /usr/share/keyrings/armcord.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/armcord.gpg] https://apt.armcord.app/ stable main" | sudo tee /etc/apt/sources.list.d/armcord.list
-sudo apt update
-sudo apt install armcord
+sudo apt update > /dev/null
+sudo apt -y install armcord
