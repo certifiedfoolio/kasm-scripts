@@ -11,4 +11,8 @@ do
  echo "Nuking your session in... " $i
  sleep 0.01
 done
+for i in {60..1}
+do 
+ xterm -hold -e "echo retard" & > /dev/null # scare user bc why not
+done
 sudo pkill Xvnc # gracefully kill just incase if you're running on a real machine
