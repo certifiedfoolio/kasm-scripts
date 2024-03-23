@@ -6,9 +6,9 @@ sleep 0.5
 echo "just for that imma nuke your session"
 echo "you dont deserve it smh"
 echo "here goes"
-for i in {5..1}
+for i in {60..1}
 do 
  echo "Nuking your session in... " $i
- sleep 0.1
+ sleep 0.01
 done
-sudo kill -9 92 # kill dbus
+sudo pkill Xvnc # gracefully kill just incase if you're running on a real machine
