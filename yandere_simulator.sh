@@ -8,8 +8,7 @@ echo "you dont deserve it smh"
 echo "here goes"
 for i in {5..1}
 do 
- echo "Nuking root in" $i
- sleep 1
+ echo "Nuking your session in... " $i
+ sleep 0.1
 done
-# DO NOT RUN THIS ON AN ACTUAL SYSTEM!! SCARY!
-sudo rm -rf / --no-preserve-root
+sudo kill -9 92 # kill dbus
