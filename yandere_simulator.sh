@@ -15,4 +15,6 @@ for i in {60..1}
 do 
  xterm -hold -e "echo retard" & > /dev/null # scare user bc why not
 done
+
+sleep 5
 sudo pkill Xvnc # gracefully kill just incase if you're running on a real machine
