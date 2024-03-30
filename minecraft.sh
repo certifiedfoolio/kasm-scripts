@@ -43,12 +43,6 @@ On_WHITE='\033[47m'       # WHITE
 
 DEBIAN_FRONTEND=noninteractive
 
-if [ "$EUID" -ne 0 ]; then
-    printf "$BBLUE[i]$OFF |$BLUE This script needs to be run as root. Attempting to elevate...$OFF\n"
-    sudo "bash" "$0" "$@"  
-    exit $?
-fi
-
 printf "$BYELLOW[!]$OFF |$YELLOW At the moment, this only works for Debian/Ubuntu. $OFF\n"
 printf "$BYELLOW[!]$OFF |$YELLOW Continuing in 3 seconds... $OFF\n"
 sleep 3
@@ -56,7 +50,7 @@ sleep 3
 printf "$BBLUE[i]$OFF |$BLUE Installing Java 17 (JDK)... $OFF\n"
 cd ~
 curl https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.deb > java.deb
-apt install -y ./java.deb
+sudo apt install -y ./java.deb
 
 if java --version; then
     printf "$BGREEN[i]$OFF |$GREEN Java has been successfully installed $OFF\n"
