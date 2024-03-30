@@ -64,3 +64,13 @@ else
     printf "$BRED[!]$OFF |$RED Java did not successfully install. $OFF\n"
     exit 1
 fi
+
+printf "$BBLUE[i]$OFF |$BLUE Installing ATLauncher... $OFF\n"
+cd Desktop
+mkdir atlauncher
+cd atlauncher
+curl "https://download.nodecdn.net/containers/atl/ATLauncher.jar" > atlauncher.jar
+
+printf "$BGREEN[i]$OFF |$GREEN ATLauncher has been successfully installed $OFF\n"
+printf "$BBLUE[i]$OFF |$BLUE Launching ATLauncher... $OFF\n"
+java -jar atlauncher.jar
