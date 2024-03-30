@@ -57,3 +57,10 @@ printf "$BBLUE[i]$OFF |$BLUE Installing Java 17 (JDK)... $OFF\n"
 cd ~
 curl https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.deb > java.deb
 apt install -y ./java.deb
+
+if java --version; then
+    printf "$BGREEN[i]$OFF |$GREEN Java has been successfully installed $OFF\n"
+else
+    printf "$BRED[!]$OFF |$RED Java did not successfully install. $OFF\n"
+    exit 1
+fi
