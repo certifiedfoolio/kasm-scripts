@@ -107,3 +107,4 @@ bash "/tmp/$FILENAME.sh"
 
 printf "$BBLUE[i] $OFF|$BLUE Script stopped, removing tempfile...$OFF\n"
 rm -rf "/tmp/$FILENAME.sh"
+printf "$OFF"
