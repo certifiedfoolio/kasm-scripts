@@ -7,21 +7,26 @@ fi
 DEBIAN_FRONTEND=noninteractive
 
 echo "[ ########## WARNING! PLEASE READ!!! ########## ]"
-echo "THIS ONLY WORKS ON DEBIAN/UBUNTU CONTAINERS -----"
+echo "THIS ONLY WORKS ON DEBIAN-BASED/FEDORA-BASED CONTAINERS! -----"
 echo "IF YOU ARENT IN ONE SWITCH TO ONE OR PRESS CTRL+C"
 echo "Waiting 3 seconds..."
 sleep 3
 
+echo "Detecting container..."
+which dnf >/dev/null && { DISTRO="FEDORA"; exit 0; }
+which apt-get >/dev/null && { DISTRO="DEBIAN"; }
+if [ "$DISTRO" == "DEBIAN" ]; then PKGMGR="apt"
+if [ "$DISTRO" == "FEDORA" ]; then PKGMGR="dnf"
 
 # Install SNAP
-sudo apt -y update
-sudo apt -y install snapd
+sudo $PKGMGR -y update
+sudo $PKGMGR -y install snapd
 sudo snap install core
 sudo snap install snap-store
 
 # Install Flatpak
-sudo apt -y install flatpak
-sudo apt -y install gnome-software-plugin-flatpak
+sudo $PKGMGR -y install flatpak
+sudo $PKGMGR -y install gnome-software-plugin-flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 clear 
