@@ -15,6 +15,7 @@ sleep 3
 echo "Detecting container..."
 which dnf >/dev/null && { DISTRO="FEDORA"; exit 0; }
 which apt-get >/dev/null && { DISTRO="DEBIAN"; }
+echo "Detected container:$DISTRO"
 if [ "$DISTRO" == "DEBIAN" ]; then PKGMGR="apt"
 if [ "$DISTRO" == "FEDORA" ]; then PKGMGR="dnf"
 
