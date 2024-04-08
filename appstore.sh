@@ -16,7 +16,9 @@ echo "Detecting container..."
 which dnf >/dev/null && { DISTRO="FEDORA"; exit 0; }
 which apt-get >/dev/null && { DISTRO="DEBIAN"; }
 if [ "$DISTRO" == "DEBIAN" ]; then PKGMGR="apt"
+fi
 if [ "$DISTRO" == "FEDORA" ]; then PKGMGR="dnf"
+fi
 
 # Install SNAP
 sudo $PKGMGR -y update
